@@ -74,6 +74,7 @@ It is a Maven Plugin that generates QueryDSL-SQL compatible Static Models from J
         <version>1.0.0</version>
         <configuration>
             <generators>
+                <!-- use as many generators as you need -->
                 <generator>
                     <sourcePackage>pl.exsio.querydsl.entityql.examples.entity</sourcePackage>
                     <destinationPackage>pl.exsio.querydsl.entityql.examples.entity.generated</destinationPackage>
