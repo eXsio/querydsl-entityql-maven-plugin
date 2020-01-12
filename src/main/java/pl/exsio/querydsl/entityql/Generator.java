@@ -2,13 +2,15 @@ package pl.exsio.querydsl.entityql;
 
 public class Generator {
 
+    private final static String SEPARATOR = System.getProperty("file.separator");
+
     private String sourcePackage;
 
     private String destinationPackage;
 
     private String filenamePattern = "Q%s.java";
 
-    private String destinationPath;
+    private String destinationPath = "${project.basedir}" + SEPARATOR + "src" + SEPARATOR + "main" + SEPARATOR + "java";
 
     public Generator(String sourcePackage, String destinationPackage, String filenamePattern, String destinationPath) {
         this.sourcePackage = sourcePackage;
