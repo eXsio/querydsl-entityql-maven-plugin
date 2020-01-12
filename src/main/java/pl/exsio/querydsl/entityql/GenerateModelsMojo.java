@@ -33,6 +33,9 @@ public class GenerateModelsMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
 
+    @Parameter(defaultValue = "${project.basedir}", readonly = true)
+    private String baseDir;
+
     public void execute() throws MojoExecutionException {
         URLClassLoader classLoader = classLoader();
         try {
@@ -45,6 +48,7 @@ public class GenerateModelsMojo extends AbstractMojo {
     }
 
     private void generate(Generator generator, URLClassLoader classLoader) throws Exception {
+        generator.setDefaultDestinationPathIfNeeded(baseDir);
         LOGGER.info("Generating EntityQL Static Models from package {} to package {}, destination path: {}",
                 generator.getSourcePackage(), generator.getDestinationPackage(), generator.getDestinationPath()
         );

@@ -10,7 +10,7 @@ public class Generator {
 
     private String filenamePattern = "Q%s.java";
 
-    private String destinationPath = "${project.basedir}" + SEPARATOR + "src" + SEPARATOR + "main" + SEPARATOR + "java";
+    private String destinationPath;
 
     public Generator(String sourcePackage, String destinationPackage, String filenamePattern, String destinationPath) {
         this.sourcePackage = sourcePackage;
@@ -52,6 +52,12 @@ public class Generator {
 
     public void setDestinationPath(String destinationPath) {
         this.destinationPath = destinationPath;
+    }
+
+    void setDefaultDestinationPathIfNeeded(String baseDir) {
+        if (destinationPath == null) {
+            destinationPath = baseDir + SEPARATOR + "src" + SEPARATOR + "main" + SEPARATOR + "java";
+        }
     }
 
     @Override
