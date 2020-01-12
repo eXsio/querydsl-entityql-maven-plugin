@@ -95,6 +95,8 @@ It is a Maven Plugin that generates QueryDSL-SQL compatible Static Models from J
 
 ```
 
+- generate Static Models by running the ```querydsl-entityql:generate-models``` plugin from Command Line or your IDE
+
 ## Examples
 
 Feel free to browse the [Examples Project](https://github.com/eXsio/querydsl-entityql-examples) to find out how to use EntityQL in your code.
