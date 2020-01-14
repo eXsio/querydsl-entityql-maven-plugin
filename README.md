@@ -35,7 +35,7 @@ It is a Maven Plugin that generates QueryDSL-SQL compatible Static Models from J
     <dependency>
         <groupId>com.github.eXsio</groupId>
         <artifactId>querydsl-entityql</artifactId>
-        <version>2.0.10</version>
+        <version>2.1.0</version>
     </dependency>
 
     <!-- basic dependencies required by EntityQL -->
@@ -89,7 +89,7 @@ It is a Maven Plugin that generates QueryDSL-SQL compatible Static Models from J
             <dependency>
                 <groupId>com.github.eXsio</groupId>
                 <artifactId>querydsl-entityql</artifactId>
-                <version>2.0.10</version>
+                <version>2.1.0</version>
             </dependency>
         </dependencies>
     </plugin>
