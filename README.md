@@ -106,7 +106,7 @@ It is a Maven Plugin that generates QueryDSL-SQL compatible Static Models from J
 
 ```
 
-- Creqate SQL Queries with generated models:
+- Create SQL Queries with generated models:
 
 ```java
 
