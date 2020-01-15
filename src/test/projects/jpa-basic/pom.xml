@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.eXsio</groupId>
+    <artifactId>basic-jpa-project</artifactId>
+    <version>0.1</version>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.eXsio</groupId>
+                <artifactId>querydsl-entityql-maven-plugin</artifactId>
+                <version>1.0.0</version>
+                <configuration>
+                    <generators>
+                        <!-- use as many generators as you need -->
+                        <generator>
+                            <sourcePackage>pl.exsio.querydsl.entityql.examples.entity</sourcePackage>
+                            <destinationPackage>pl.exsio.querydsl.entityql.examples.entity.generated</destinationPackage>
+                            <!-- below settings are not required. If not provided, will have the below, default values -->
+                            <!-- <destinationPath>${project.basedir}\src\main\java</destinationPath>-->
+                            <!-- <filenamePattern>Q%s.java</filenamePattern>-->
+                        </generator>
+                    </generators>
+                </configuration>
+                <dependencies>
+                    <!-- use EntityQL in the same version as in project -->
+                    <dependency>
+                        <groupId>com.github.eXsio</groupId>
+                        <artifactId>querydsl-entityql</artifactId>
+                        <version>2.1.0</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

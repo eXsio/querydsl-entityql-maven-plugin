@@ -80,4 +80,9 @@ public class GenerateModelsMojo extends AbstractMojo {
             throw new MojoExecutionException("Dependency resolution failed", e);
         }
     }
+
+
+    public List<Generator> getGenerators() {
+        return generators;
+    }
 }
