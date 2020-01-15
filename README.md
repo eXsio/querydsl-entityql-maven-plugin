@@ -3,7 +3,7 @@
 This repository is a part of [EntityQL](https://github.com/eXsio/querydsl-entityql) project.
 It is a Maven Plugin that generates QueryDSL-SQL compatible Static Models from JPA Entities. 
 
-## Generating Models:
+## Generating JPA Models:
 
 - add the following Maven Repositories to your ```pom.xml```:
 
@@ -26,13 +26,72 @@ It is a Maven Plugin that generates QueryDSL-SQL compatible Static Models from J
     <plugin>
         <groupId>com.github.eXsio</groupId>
         <artifactId>querydsl-entityql-maven-plugin</artifactId>
-        <version>1.0.0</version>
+        <version>1.1.0</version>
         <configuration>
             <generators>
                 <!-- use as many generators as you need -->
                 <generator>
                     <sourcePackage>pl.exsio.querydsl.entityql.examples.entity</sourcePackage>
                     <destinationPackage>pl.exsio.querydsl.entityql.examples.entity.generated</destinationPackage>
+                    <!-- below settings are not required. If not provided, will have the below, default values -->
+                    <!-- <destinationPath>${project.basedir}\src\main\java</destinationPath>-->
+                    <!-- <filenamePattern>Q%s.java</filenamePattern>-->
+                </generator>
+            </generators>
+        </configuration>
+        <dependencies>
+            <!-- use EntityQL in the same version as in project -->
+            <dependency>
+                <groupId>com.github.eXsio</groupId>
+                <artifactId>querydsl-entityql</artifactId>
+                <version>2.1.0</version>
+            </dependency>
+        </dependencies>
+    </plugin>
+
+```
+
+- generate Static Models by running the ```querydsl-entityql:generate-models``` plugin from Command Line or your IDE
+
+## Generating Spring Data JDBC Models:
+
+- add the following Maven Repositories to your ```pom.xml```:
+
+```xml
+
+    <!-- JitPack repository for EntityQL Maven plugin -->
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </pluginRepository>
+    </pluginRepositories>
+
+```
+
+- add the following Maven Plugin to your ```pom.xml```:
+
+```xml
+
+    <plugin>
+        <groupId>com.github.eXsio</groupId>
+        <artifactId>querydsl-entityql-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <configuration>
+            <generators>
+                <!-- use as many generators as you need -->
+                <generator>
+                    <type>SPRING_DATA_JDBC</type>
+                    <sourcePackage>pl.exsio.querydsl.entityql.examples.entity</sourcePackage>
+                    <destinationPackage>pl.exsio.querydsl.entityql.examples.entity.generated</destinationPackage>
+                    <!-- out of the box you can use one of the 2 provided naming strategies
+                        - pl.exsio.querydsl.entityql.jdbc.UpperCaseWithUnderscoresNamingStrategy
+                        - pl.exsio.querydsl.entityql.jdbc.DefaultNamingStrategy
+                        If you want to use your own custom one, you will have to add a new <dependency/> that contains it
+                    -->
+                    <params>
+                        <namingStrategy>pl.exsio.querydsl.entityql.jdbc.UpperCaseWithUnderscoresNamingStrategy</namingStrategy>
+                    </params>
                     <!-- below settings are not required. If not provided, will have the below, default values -->
                     <!-- <destinationPath>${project.basedir}\src\main\java</destinationPath>-->
                     <!-- <filenamePattern>Q%s.java</filenamePattern>-->
