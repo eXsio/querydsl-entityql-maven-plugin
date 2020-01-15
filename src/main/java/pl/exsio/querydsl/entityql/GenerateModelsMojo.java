@@ -9,21 +9,29 @@ import org.apache.maven.project.MavenProject;
 import org.reflections.Reflections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import pl.exsio.querydsl.entityql.entity.scanner.JPAQEntityScannerFactory;
+import pl.exsio.querydsl.entityql.entity.scanner.QEntityScanner;
+import pl.exsio.querydsl.entityql.entity.scanner.QEntityScannerFactory;
+import pl.exsio.querydsl.entityql.entity.scanner.SpringDataJdbcQEntityScannerFactory;
 
 import javax.persistence.Entity;
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Mojo(name = "generate-models")
 public class GenerateModelsMojo extends AbstractMojo {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenerateModelsMojo.class);
+
+    private static final Map<Generator.Type, QEntityScannerFactory> SCANNERS = new HashMap<>();
+
+    static {
+        SCANNERS.put(Generator.Type.JPA, new JPAQEntityScannerFactory());
+        SCANNERS.put(Generator.Type.SPRING_DATA_JDBC, new SpringDataJdbcQEntityScannerFactory());
+    }
 
     private final QExporter exporter = new QExporter();
 
@@ -45,6 +53,8 @@ public class GenerateModelsMojo extends AbstractMojo {
     }
 
     private void generate(Generator generator, URLClassLoader classLoader) throws Exception {
+        QEntityScanner scanner = SCANNERS.get(generator.getType()).createScanner(generator.getParams());
+        LOGGER.info("Using scanner: {}", scanner.getClass().getName());
         generator.setDefaultDestinationPathIfNeeded(project.getBasedir().getAbsolutePath());
         LOGGER.info("Generating EntityQL Static Models from package {} to package {}, destination path: {}",
                 generator.getSourcePackage(), generator.getDestinationPackage(), generator.getDestinationPath()
@@ -55,7 +65,7 @@ public class GenerateModelsMojo extends AbstractMojo {
         for (Class<?> entityClass : entityClasses) {
             LOGGER.info("Exporting class: {}", entityClass.getName());
             exporter.export(
-                    EntityQL.qEntity(entityClass),
+                    EntityQL.qEntity(entityClass, scanner),
                     generator.getFilenamePattern(),
                     generator.getDestinationPackage(),
                     generator.getDestinationPath()

@@ -1,8 +1,22 @@
 package pl.exsio.querydsl.entityql;
 
+import org.apache.maven.plugins.annotations.Parameter;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Generator {
 
+    enum Type {
+        JPA, SPRING_DATA_JDBC
+    }
+
     private final static String SEPARATOR = System.getProperty("file.separator");
+
+    private Type type = Type.JPA;
+
+    @Parameter
+    private Map<String, String> params = new HashMap<>();
 
     private String sourcePackage;
 
@@ -12,12 +26,6 @@ public class Generator {
 
     private String destinationPath;
 
-    public Generator(String sourcePackage, String destinationPackage, String filenamePattern, String destinationPath) {
-        this.sourcePackage = sourcePackage;
-        this.destinationPackage = destinationPackage;
-        this.filenamePattern = filenamePattern;
-        this.destinationPath = destinationPath;
-    }
 
     public Generator() {
     }
@@ -54,6 +62,22 @@ public class Generator {
         this.destinationPath = destinationPath;
     }
 
+    public Type getType() {
+        return type;
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Map<String, String> getParams() {
+        return params;
+    }
+
+    public void setParams(Map<String, String> params) {
+        this.params = params;
+    }
+
     void setDefaultDestinationPathIfNeeded(String baseDir) {
         if (destinationPath == null) {
             destinationPath = baseDir + SEPARATOR + "src" + SEPARATOR + "main" + SEPARATOR + "java";
@@ -67,6 +91,8 @@ public class Generator {
                 ", destinationPackage='" + destinationPackage + '\'' +
                 ", filenamePattern='" + filenamePattern + '\'' +
                 ", destinationPath='" + destinationPath + '\'' +
+                ", type='" + type + '\'' +
+                ", params='" + params + '\'' +
                 '}';
     }
 }
