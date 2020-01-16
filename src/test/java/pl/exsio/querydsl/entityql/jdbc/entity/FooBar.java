@@ -1,13 +1,19 @@
 package pl.exsio.querydsl.entityql.jdbc.entity;
 
-import lombok.Value;
-import lombok.With;
 import org.springframework.data.annotation.Id;
 
-@Value
+import java.util.Optional;
+
 public class FooBar {
 
     @Id
-    @With
     private final Long id;
+
+    public FooBar(Long id) {
+        this.id = id;
+    }
+
+    public Optional<Long> getId() {
+        return Optional.ofNullable(id);
+    }
 }
