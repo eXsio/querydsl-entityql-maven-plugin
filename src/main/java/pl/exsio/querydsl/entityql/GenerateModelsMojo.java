@@ -7,8 +7,12 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.reflections.Reflections;
+import org.reflections.scanners.FieldAnnotationsScanner;
+import org.reflections.util.ConfigurationBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.annotation.Id;
+import pl.exsio.querydsl.entityql.Generator.Type;
 import pl.exsio.querydsl.entityql.entity.scanner.JPAQEntityScannerFactory;
 import pl.exsio.querydsl.entityql.entity.scanner.QEntityScanner;
 import pl.exsio.querydsl.entityql.entity.scanner.QEntityScannerFactory;
@@ -16,21 +20,28 @@ import pl.exsio.querydsl.entityql.entity.scanner.SpringDataJdbcQEntityScannerFac
 
 import javax.persistence.Entity;
 import java.io.File;
+import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
+import java.util.function.BiFunction;
+import java.util.stream.Collectors;
 
 @Mojo(name = "generate-models")
 public class GenerateModelsMojo extends AbstractMojo {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GenerateModelsMojo.class);
 
-    private static final Map<Generator.Type, QEntityScannerFactory> SCANNERS = new HashMap<>();
+    private static final EnumMap<Type, QEntityScannerFactory> SCANNERS = new EnumMap(Type.class);
+    private static final EnumMap<Type, BiFunction<Generator, URLClassLoader, Set<Class<?>>>> REFLECTION_SCANNERS = new EnumMap(
+            Type.class);
 
     static {
-        SCANNERS.put(Generator.Type.JPA, new JPAQEntityScannerFactory());
-        SCANNERS.put(Generator.Type.SPRING_DATA_JDBC, new SpringDataJdbcQEntityScannerFactory());
+        SCANNERS.put(Type.JPA, new JPAQEntityScannerFactory());
+        SCANNERS.put(Type.SPRING_DATA_JDBC, new SpringDataJdbcQEntityScannerFactory());
+        REFLECTION_SCANNERS.put(Type.JPA, GenerateModelsMojo::resolveJpaEntityClasses);
+        REFLECTION_SCANNERS.put(Type.SPRING_DATA_JDBC, GenerateModelsMojo::resolveJdbcEntityClasses);
     }
 
     private final QExporter exporter = new QExporter();
@@ -57,11 +68,11 @@ public class GenerateModelsMojo extends AbstractMojo {
         LOGGER.info("Using scanner: {}", scanner.getClass().getName());
         generator.setDefaultDestinationPathIfNeeded(project.getBasedir().getAbsolutePath());
         LOGGER.info("Generating EntityQL Static Models from package {} to package {}, destination path: {}",
-                generator.getSourcePackage(), generator.getDestinationPackage(), generator.getDestinationPath()
+                    generator.getSourcePackage(), generator.getDestinationPackage(), generator.getDestinationPath()
         );
-        Reflections reflections = new Reflections(generator.getSourcePackage(), classLoader);
-        Set<Class<?>> entityClasses = reflections.getTypesAnnotatedWith(Entity.class);
-        LOGGER.info("Found {} Entity Classes to export in package {}", entityClasses.size(), generator.getSourcePackage());
+        Set<Class<?>> entityClasses = REFLECTION_SCANNERS.get(generator.getType()).apply(generator, classLoader);
+        LOGGER.info("Found {} Entity Classes to export in package {}", entityClasses.size(),
+                    generator.getSourcePackage());
         for (Class<?> entityClass : entityClasses) {
             LOGGER.info("Exporting class: {}", entityClass.getName());
             exporter.export(
@@ -85,14 +96,30 @@ public class GenerateModelsMojo extends AbstractMojo {
                     throw new MojoExecutionException(element + " is an invalid classpath element", e);
                 }
             }
-            return new URLClassLoader(projectClasspathList.toArray(new URL[0]), Thread.currentThread().getContextClassLoader());
+            return new URLClassLoader(projectClasspathList.toArray(new URL[0]),
+                                      Thread.currentThread().getContextClassLoader());
         } catch (DependencyResolutionRequiredException e) {
             throw new MojoExecutionException("Dependency resolution failed", e);
         }
     }
 
-
     public List<Generator> getGenerators() {
         return generators;
+    }
+
+    private static Set<Class<?>> resolveJpaEntityClasses(Generator generator,
+                                                  URLClassLoader classLoader) {
+        Reflections reflections = new Reflections(generator.getSourcePackage(), classLoader);
+        return reflections.getTypesAnnotatedWith(Entity.class);
+    }
+
+    private static Set<Class<?>> resolveJdbcEntityClasses(Generator generator, URLClassLoader classLoader) {
+        Reflections reflections = new Reflections(
+                new ConfigurationBuilder().forPackages(generator.getSourcePackage())
+                                          .addClassLoader(classLoader)
+                                          .addScanners(new FieldAnnotationsScanner()));
+        Set<Field> fieldsAnnotatedWith = reflections.getFieldsAnnotatedWith(Id.class);
+        return fieldsAnnotatedWith.stream().map(Field::getDeclaringClass).collect(
+                Collectors.toSet());
     }
 }
