@@ -103,7 +103,7 @@ public class GenerateModelsMojo extends AbstractMojo {
         }
     }
 
-    public List<Generator> getGenerators() {
+    List<Generator> getGenerators() {
         return generators;
     }
 
@@ -114,10 +114,7 @@ public class GenerateModelsMojo extends AbstractMojo {
     }
 
     private static Set<Class<?>> resolveJdbcEntityClasses(Generator generator, URLClassLoader classLoader) {
-        Reflections reflections = new Reflections(
-                new ConfigurationBuilder().forPackages(generator.getSourcePackage())
-                                          .addClassLoader(classLoader)
-                                          .addScanners(new FieldAnnotationsScanner()));
+        Reflections reflections = new Reflections(generator.getSourcePackage(), classLoader, new FieldAnnotationsScanner());
         Set<Field> fieldsAnnotatedWith = reflections.getFieldsAnnotatedWith(Id.class);
         return fieldsAnnotatedWith.stream().map(Field::getDeclaringClass).collect(
                 Collectors.toSet());

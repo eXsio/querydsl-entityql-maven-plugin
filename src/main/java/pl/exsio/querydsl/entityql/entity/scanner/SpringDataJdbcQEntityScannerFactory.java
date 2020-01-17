@@ -19,7 +19,7 @@ public class SpringDataJdbcQEntityScannerFactory implements QEntityScannerFactor
     }
 
     private NamingStrategy getNamingStrategy(Map<String, String> params) throws MojoExecutionException {
-        String namingStrategyClass = Optional.of(params.get(NAMING_STRATEGY)).orElse(DEFAULT_NAMING_STRATEGY);
+        String namingStrategyClass = Optional.ofNullable(params.get(NAMING_STRATEGY)).orElse(DEFAULT_NAMING_STRATEGY);
         try {
             return (NamingStrategy) Class.forName(namingStrategyClass).newInstance();
         } catch (Exception ex) {
