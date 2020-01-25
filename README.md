@@ -207,6 +207,16 @@ Long count = queryFactory.select(count())
                 ).fetchOne();
 ```
 
+## Don't like calling Maven plugin manually?
+
+Use this Maven Run Configuration to automate things:
+
+```
+mvn clean install querydsl-entityql:generate-models install --also-make -f pom.xml
+```
+
+**You can create and save this Run configuration in your IDE to make things easy**
+
 ## Examples
 
 Feel free to browse the [Examples Project](https://github.com/eXsio/querydsl-entityql-examples) to find out how to use EntityQL in your code.
