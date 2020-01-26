@@ -217,6 +217,56 @@ mvn clean install querydsl-entityql:generate-models install --also-make -f pom.x
 
 **You can create and save this Run configuration in your IDE to make things easy**
 
+Alternatively you can configure custom Maven profile that will pre-compile and generate the Query Models:
+
+```xml
+    <profile>
+        <id>generate-query-models</id>
+        <build>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.3</version>
+                    <executions>
+                        <execution>
+                            <id>generate</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>compile</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        ...
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.github.eXsio</groupId>
+                    <artifactId>querydsl-entityql-maven-plugin</artifactId>
+                    <version>1.1.3</version>
+                    <executions>
+                        <execution>
+                            <id>generate</id>
+                            <phase>generate-sources</phase>
+                            <goals>
+                                <goal>generate-models</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        ...
+                    </configuration>
+                    <dependencies>
+                        ...
+                    </dependencies>
+                </plugin>
+
+            </plugins>
+        </build>
+    </profile>
+```
+
 ## Examples
 
 Feel free to browse the [Examples Project](https://github.com/eXsio/querydsl-entityql-examples) to find out how to use EntityQL in your code.
