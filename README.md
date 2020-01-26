@@ -267,6 +267,9 @@ Alternatively you can configure custom Maven profile that will pre-compile and g
     </profile>
 ```
 
+**This way Query Model generation will be a part of standard clean-install Maven build, as long as the Profile is enabled.**
+**It will also ensure that Models are based on the current source code.**
+
 ## Examples
 
 Feel free to browse the [Examples Project](https://github.com/eXsio/querydsl-entityql-examples) to find out how to use EntityQL in your code.
