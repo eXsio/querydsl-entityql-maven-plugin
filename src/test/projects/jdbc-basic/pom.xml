@@ -18,8 +18,8 @@
                         <!-- use as many generators as you need -->
                         <generator>
                             <type>SPRING_DATA_JDBC</type>
-                            <sourcePackage>pl.exsio.querydsl.entityql.jdbc.entity</sourcePackage>
-                            <destinationPackage>pl.exsio.querydsl.entityql.jdbc.entity</destinationPackage>
+                            <sourcePackage>pl.exsio.querydsl.entityql.examples.entity</sourcePackage>
+                            <destinationPackage>pl.exsio.querydsl.entityql.examples.entity.generated</destinationPackage>
                             <params>
                                 <namingStrategy>pl.exsio.querydsl.entityql.jdbc.UpperCaseWithUnderscoresNamingStrategy</namingStrategy>
                             </params>
