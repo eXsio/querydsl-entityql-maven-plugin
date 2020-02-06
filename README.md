@@ -20,7 +20,7 @@ It is a Maven Plugin that generates QueryDSL-SQL compatible Static Models from J
     </pluginRepositories>
 
 ```
-
+ 
 - add the following Maven Plugin to your ```pom.xml```:
 
 ```xml
