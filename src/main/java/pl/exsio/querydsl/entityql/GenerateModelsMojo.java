@@ -110,6 +110,8 @@ public class GenerateModelsMojo extends AbstractMojo {
     private static Set<Class<?>> resolveJpaEntityClasses(Generator generator,
                                                   URLClassLoader classLoader) {
         Reflections reflections = new Reflections(generator.getSourcePackage(), classLoader);
+        LOGGER.info("Found {} Classes overall in package {}", reflections.getAllTypes().size(),
+                generator.getSourcePackage());
         return reflections.getTypesAnnotatedWith(Entity.class);
     }
 
