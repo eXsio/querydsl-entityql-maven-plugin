@@ -90,6 +90,7 @@ public class GenerateModelsMojo extends AbstractMojo {
             classpathElements = project.getCompileClasspathElements();
             List<URL> projectClasspathList = new ArrayList<>();
             for (String element : classpathElements) {
+                LOGGER.info("Adding element to Class Loader: {}", element);
                 try {
                     projectClasspathList.add(new File(element).toURI().toURL());
                 } catch (MalformedURLException e) {
@@ -110,8 +111,6 @@ public class GenerateModelsMojo extends AbstractMojo {
     private static Set<Class<?>> resolveJpaEntityClasses(Generator generator,
                                                   URLClassLoader classLoader) {
         Reflections reflections = new Reflections(generator.getSourcePackage(), classLoader);
-        LOGGER.info("Found {} Classes overall in package {}", reflections.getAllTypes().size(),
-                generator.getSourcePackage());
         return reflections.getTypesAnnotatedWith(Entity.class);
     }
 
