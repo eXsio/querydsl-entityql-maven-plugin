@@ -71,6 +71,9 @@ public class GenerateModelsMojo extends AbstractMojo {
                     generator.getSourcePackage(), generator.getDestinationPackage(), generator.getDestinationPath()
         );
         Set<Class<?>> entityClasses = REFLECTION_SCANNERS.get(generator.getType()).apply(generator, classLoader);
+        for (String sourceClass : generator.getSourceClasses()) {
+            entityClasses.add(loadClass(classLoader, sourceClass));
+        }
         LOGGER.info("Found {} Entity Classes to export in package {}", entityClasses.size(),
                     generator.getSourcePackage());
         for (Class<?> entityClass : entityClasses) {
@@ -81,6 +84,14 @@ public class GenerateModelsMojo extends AbstractMojo {
                     generator.getDestinationPackage(),
                     generator.getDestinationPath()
             );
+        }
+    }
+
+    private Class<?> loadClass(URLClassLoader classLoader, String sourceClass) throws MojoExecutionException {
+        try {
+            return Class.forName(sourceClass, true, classLoader);
+        } catch (ClassNotFoundException e) {
+            throw new MojoExecutionException("Unable to Load Class: "+sourceClass, e);
         }
     }
 

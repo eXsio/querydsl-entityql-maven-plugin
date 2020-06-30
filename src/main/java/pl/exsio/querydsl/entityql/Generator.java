@@ -2,7 +2,9 @@ package pl.exsio.querydsl.entityql;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Generator {
@@ -21,6 +23,8 @@ public class Generator {
     private String sourcePackage;
 
     private String destinationPackage;
+
+    private List<String> sourceClasses;
 
     private String filenamePattern = "Q%s.java";
 
@@ -68,6 +72,17 @@ public class Generator {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public List<String> getSourceClasses() {
+        if(sourceClasses == null) {
+            return new ArrayList<>();
+        }
+        return sourceClasses;
+    }
+
+    public void setSourceClasses(List<String> sourceClasses) {
+        this.sourceClasses = sourceClasses;
     }
 
     public Map<String, String> getParams() {
