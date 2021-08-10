@@ -1,6 +1,6 @@
 # Static Code Generation for QueryDSL EntityQL 
 
-[![Build Status](https://travis-ci.org/eXsio/querydsl-entityql-maven-plugin.svg?branch=master)](https://travis-ci.org/eXsio/querydsl-entityql-maven-plugin)
+[![Build Status](https://www.travis-ci.com/eXsio/querydsl-entityql-maven-plugin.svg?branch=master)](https://www.travis-ci.com/eXsio/querydsl-entityql-maven-plugin.svg?branch=master)
 [![](https://jitpack.io/v/eXsio/querydsl-entityql-maven-plugin.svg)](https://jitpack.io/#eXsio/querydsl-entityql-maven-plugin)
 
 This repository is a part of [EntityQL](https://github.com/eXsio/querydsl-entityql) project.
